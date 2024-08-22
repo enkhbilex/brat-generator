@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brat Generator</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .background-image {
+            width: 300px;
+            height: 300px;
+            background-color: #8ace00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        } /* Added missing closing brace here */
+
+        .text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scaleY(1.3);
+            font-size: 3em; 
+            font-weight: normal;
+            color: black;
+            text-align: center;
+            white-space: nowrap;
+            font-family: Arial, sans-serif;
+            line-height: 1.1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .input-section {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            font-size: 1.2em;
+            padding: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 2px solid #8ace00;
+            box-sizing: border-box;
+        }
+
+        input[type="range"] {
+            width: 80%;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #8ace00;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        button:hover {
+            background-color: #6eb538;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Brat Generator</h1>
+
+    <div class="container">
+        <div class="background-image" id="background">
+            <div class="text-overlay" id="textOverlay">brat</div>
+        </div>
+    </div>
+
+    <div class="input-section">
+        <input type="text" id="userInput" placeholder="Enter your text here" oninput="updateText()" />
+        <label for="qualityRange">Quality: <span id="qualityValue">0.1</span></label>
+        <input type="range" id="qualityRange" min="0.1" max="1" step="0.1" value="0.1">
+        <button onclick="saveImage()">Save Image</button>
+    </div>
+
+    <script>
+        function updateText() {
+            var input = document.getElementById("userInput").value;
+            document.getElementById("textOverlay").innerText = input;
+        }
+
+        document.getElementById("qualityRange").addEventListener("input", function() {
+            document.getElementById("qualityValue").innerText = this.value;
+        });
+
+        function saveImage() {
+            var quality = document.getElementById("qualityRange").value;
+            html2canvas(document.querySelector(".container"), {
+                scale: 2,  // Use a higher scale for better font rendering
+                useCORS: true
+            }).then(canvas => {
+                let image = canvas.toDataURL("image/png", quality);
+                let link = document.createElement('a');
+                link.href = image;
+                link.download = 'brat_image.png';
+                link.click();
+            });
+        }
+    </script>
+
+</body>
+</html>
